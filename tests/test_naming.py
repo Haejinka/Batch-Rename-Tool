@@ -37,6 +37,37 @@ class NamingTests(unittest.TestCase):
             ["Reel_01 (Ad).mp4", "Reel_02 (Ad).mp4"],
         )
 
+    def test_can_use_hyphen_separator(self) -> None:
+        files = [Path("clip_a.mp4"), Path("clip_b.mp4")]
+
+        items = build_rename_items(
+            source_files=files,
+            prefix="Reel",
+            suffix="",
+            start_number=1,
+            number_padding=2,
+            separator="-",
+        )
+
+        self.assertEqual(
+            [item.target_name for item in items],
+            ["Reel-01.mp4", "Reel-02.mp4"],
+        )
+
+    def test_whitespace_only_suffix_is_ignored(self) -> None:
+        files = [Path("clip_a.mp4")]
+
+        items = build_rename_items(
+            source_files=files,
+            prefix="Reel",
+            suffix=" ",
+            start_number=1,
+            number_padding=1,
+            separator="-",
+        )
+
+        self.assertEqual([item.target_name for item in items], ["Reel-1.mp4"])
+
     def test_padding_zero_outputs_plain_numbers(self) -> None:
         self.assertEqual(format_sequence_number(9, 0), "9")
 

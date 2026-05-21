@@ -47,6 +47,7 @@ class StorageTests(unittest.TestCase):
                 "selected_preset": "Client A",
                 "prefix": "ClientA",
                 "suffix": " (Ad)",
+                "separator": "-",
                 "start_number": "7",
                 "padding": "2",
                 "selected_extensions": [".mp4", ".mov"],

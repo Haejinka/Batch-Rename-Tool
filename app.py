@@ -9,10 +9,12 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from core.config import (
     CUSTOM_PRESET,
+    DEFAULT_SEPARATOR,
     DEFAULT_NUMBER_PADDING,
     DEFAULT_PREFIX,
     DEFAULT_START_NUMBER,
     DEFAULT_SUFFIX,
+    SEPARATOR_OPTIONS,
     PRESETS,
     VIDEO_EXTENSION_ORDER,
 )
@@ -64,6 +66,7 @@ class RenameToolApp(tk.Tk):
         self.preset_var = tk.StringVar(value="Organic")
         self.prefix_var = tk.StringVar(value=DEFAULT_PREFIX)
         self.suffix_var = tk.StringVar(value=DEFAULT_SUFFIX)
+        self.separator_var = tk.StringVar(value=DEFAULT_SEPARATOR)
         self.start_var = tk.StringVar(value=str(DEFAULT_START_NUMBER))
         self.padding_var = tk.StringVar(value=str(DEFAULT_NUMBER_PADDING))
         self.filter_var = tk.StringVar(value="")
@@ -366,8 +369,17 @@ class RenameToolApp(tk.Tk):
         ttk.Entry(toolbar, textvariable=self.start_var).grid(row=2, column=1, sticky="ew", padx=(8, 8), pady=(10, 0))
         ttk.Label(toolbar, text="Padding", style="PanelTitle.TLabel").grid(row=2, column=2, sticky="w", pady=(10, 0))
         ttk.Entry(toolbar, textvariable=self.padding_var).grid(row=2, column=3, sticky="ew", padx=(8, 8), pady=(10, 0))
+        ttk.Label(toolbar, text="Separator", style="PanelTitle.TLabel").grid(row=2, column=4, sticky="w", pady=(10, 0))
+        self.separator_combo = ttk.Combobox(
+            toolbar,
+            values=SEPARATOR_OPTIONS,
+            textvariable=self.separator_var,
+            state="readonly",
+            width=4,
+        )
+        self.separator_combo.grid(row=2, column=5, sticky="ew", padx=(8, 8), pady=(10, 0))
         ttk.Label(toolbar, text="Selection controls are below.", style="PanelHelp.TLabel").grid(
-            row=2, column=4, columnspan=4, sticky="w", pady=(12, 0)
+            row=2, column=6, columnspan=2, sticky="w", pady=(12, 0)
         )
 
         selection_bar = ttk.Frame(content, style="Toolbar.TFrame", padding=(12, 10))
@@ -507,6 +519,7 @@ class RenameToolApp(tk.Tk):
             self.folder_var,
             self.prefix_var,
             self.suffix_var,
+            self.separator_var,
             self.start_var,
             self.padding_var,
         ):
@@ -625,6 +638,7 @@ class RenameToolApp(tk.Tk):
             "selected_preset": selected_preset,
             "prefix": self.prefix_var.get(),
             "suffix": self.suffix_var.get(),
+            "separator": self.separator_var.get() if self.separator_var.get() in SEPARATOR_OPTIONS else DEFAULT_SEPARATOR,
             "start_number": self.start_var.get().strip(),
             "padding": self.padding_var.get().strip(),
             "selected_extensions": [
@@ -665,6 +679,10 @@ class RenameToolApp(tk.Tk):
         padding = settings.get("padding")
         if isinstance(padding, str) and padding.strip():
             self.padding_var.set(padding)
+
+        separator = settings.get("separator")
+        if isinstance(separator, str) and separator in SEPARATOR_OPTIONS:
+            self.separator_var.set(separator)
 
         selected_extensions = settings.get("selected_extensions")
         if isinstance(selected_extensions, list):
@@ -1072,6 +1090,7 @@ class RenameToolApp(tk.Tk):
 
         prefix = self.prefix_var.get()
         suffix = self.suffix_var.get()
+        separator = self.separator_var.get() if self.separator_var.get() in SEPARATOR_OPTIONS else DEFAULT_SEPARATOR
         source_files = discover_video_files(folder, selected_extensions)
 
         if not source_files:
@@ -1099,6 +1118,7 @@ class RenameToolApp(tk.Tk):
             suffix=suffix,
             start_number=start_number,
             number_padding=padding,
+            separator=separator,
         )
         errors.extend(validate_preview_items(preview_items))
 

@@ -18,9 +18,11 @@ def build_target_filename(
     padding: int,
     suffix: str,
     extension: str,
+    separator: str = "_",
 ) -> str:
     sequence = format_sequence_number(number, padding)
-    return f"{prefix}_{sequence}{suffix}{extension}"
+    normalized_suffix = "" if suffix and not suffix.strip() else suffix
+    return f"{prefix}{separator}{sequence}{normalized_suffix}{extension}"
 
 
 def build_rename_items(
@@ -29,6 +31,7 @@ def build_rename_items(
     suffix: str,
     start_number: int,
     number_padding: int,
+    separator: str = "_",
 ) -> list[RenameItem]:
     items: list[RenameItem] = []
     number = start_number
@@ -40,6 +43,7 @@ def build_rename_items(
             padding=number_padding,
             suffix=suffix,
             extension=source_file.suffix,
+            separator=separator,
         )
         items.append(
             RenameItem(
