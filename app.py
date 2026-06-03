@@ -122,6 +122,10 @@ class RenameToolApp(tk.Tk):
         accent_teal = "#5CC8BD"
 
         self.configure(background=app_bg)
+        self.option_add("*insertBackground", text_primary)
+        self.option_add("*insertWidth", 2)
+        self.option_add("*selectBackground", accent_blue)
+        self.option_add("*selectForeground", "#FFFFFF")
         style.configure(".", font=("Segoe UI", 11), background=app_bg, foreground=text_primary)
         style.configure("App.TFrame", background=app_bg)
         style.configure("Sidebar.TFrame", background=sidebar_bg)
@@ -201,12 +205,30 @@ class RenameToolApp(tk.Tk):
             foreground=[("!disabled", "#FFFFFF")],
         )
 
-        style.configure("TEntry", fieldbackground=panel_alt, foreground=text_primary, borderwidth=1)
-        style.configure("TCombobox", fieldbackground=panel_alt, background=panel_bg, foreground=text_primary)
+        style.configure(
+            "TEntry",
+            fieldbackground=panel_alt,
+            foreground=text_primary,
+            borderwidth=1,
+            insertcolor=text_primary,
+            insertwidth=2,
+        )
+        style.configure(
+            "TCombobox",
+            fieldbackground=panel_alt,
+            background=panel_bg,
+            foreground=text_primary,
+            insertcolor=text_primary,
+            insertwidth=2,
+            arrowsize=14,
+        )
         style.map(
             "TEntry",
             fieldbackground=[("disabled", "#202020"), ("!disabled", panel_alt)],
             foreground=[("disabled", "#8B939C"), ("!disabled", text_primary)],
+            bordercolor=[("focus", accent_blue), ("!focus", border)],
+            lightcolor=[("focus", accent_blue), ("!focus", border)],
+            darkcolor=[("focus", accent_blue), ("!focus", border)],
         )
         style.map(
             "TCombobox",
@@ -214,6 +236,9 @@ class RenameToolApp(tk.Tk):
             selectforeground=[("readonly", text_primary)],
             selectbackground=[("readonly", panel_alt)],
             foreground=[("readonly", text_primary)],
+            bordercolor=[("focus", accent_blue), ("!focus", border)],
+            lightcolor=[("focus", accent_blue), ("!focus", border)],
+            darkcolor=[("focus", accent_blue), ("!focus", border)],
         )
 
         style.configure("TCheckbutton", background=panel_alt, foreground=text_primary)
