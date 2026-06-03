@@ -89,6 +89,7 @@ class RenameToolApp(tk.Tk):
 
         self._configure_theme()
         self._build_ui()
+        self._apply_input_cursor_style()
         self._bind_events()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
         self._restore_saved_settings()
@@ -534,6 +535,25 @@ class RenameToolApp(tk.Tk):
 
         self._refresh_extension_summary()
         self._refresh_filter_summary(0, 0)
+
+    def _apply_input_cursor_style(self) -> None:
+        caret_color = "#F2F5F8"
+
+        def visit(widget: tk.Misc) -> None:
+            for child in widget.winfo_children():
+                if isinstance(child, (tk.Entry, ttk.Entry, ttk.Combobox)):
+                    try:
+                        child.configure(
+                            insertbackground=caret_color,
+                            insertwidth=2,
+                            selectbackground="#4A9CFF",
+                            selectforeground=caret_color,
+                        )
+                    except tk.TclError:
+                        pass
+                visit(child)
+
+        visit(self)
 
     def _bind_events(self) -> None:
         self.preset_var.trace_add("write", self._handle_preset_change)
